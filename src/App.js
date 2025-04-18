@@ -1,54 +1,25 @@
-import { useEffect, useState } from "react";
-import { CircularProgress } from "@mui/material";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { auth } from "./config/firebase";
-import routes from "./config/routes";
-import Center from "./components/utils/Center";
-import AuthChecker from "./components/auth/AuthChecker";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signup from "./Signup";
+import Login from "./Login";
+
+// Replace this with your real dashboard component
+const Dashboard = () => (
+  <div>
+    <h2>Welcome to QueryDoc Dashboard</h2>
+    <p>This is a placeholder dashboard page.</p>
+  </div>
+);
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.info("User detected.");
-      } else {
-        console.info("No user detected");
-      }
-      setLoading(false);
-    });
-  }, []);
-
-  if (loading)
-    return (
-      <Center>
-        <CircularProgress />
-      </Center>
-    );
-
   return (
-    <div>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <Routes>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                route.protected ? (
-                  <AuthChecker>
-                    <route.component />
-                  </AuthChecker>
-                ) : (
-                  <route.component />
-                )
-              }
-            />
-          ))}
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
